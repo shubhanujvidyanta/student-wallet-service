@@ -53,14 +53,14 @@ public class StudentController {
 	@RequestMapping("/getById/{Id}")
 	public Map<String, Object> getStudentById(@PathVariable("Id") Long studentId) {
 
-		return studentService.getStudentById(studentId);
+		return studentService.getStudentMapById(studentId);
 	}
 
 	@GET
 	@RequestMapping("/getByEmail/{email}")
 	public Map<String, Object> getStudentByEmail(@PathVariable("email") String email) {
 
-		return studentService.getStudentByEmail(email);
+		return studentService.getStudentMapByEmail(email);
 	}
 
 	@POST

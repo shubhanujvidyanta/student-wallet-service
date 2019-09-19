@@ -7,10 +7,11 @@ import com.shubhanuj.springboot.student.model.Wallet;
 
 public interface WalletService {
 
-	Map<String, Object> addMoneyToStudentWallet(Long studentId, Money money);
 
 	Map<String, Object> getWalletForStudent(Long studentId);
 
 	Wallet saveWallet(Wallet wallet);
+
+	Map<String, Object> addMoneyToStudentWalletFromExternalPayment(Long studentId, Money money);
 
 }

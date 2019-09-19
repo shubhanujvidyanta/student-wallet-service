@@ -36,7 +36,7 @@ public class WalletController {
 	public Map<String, Object> addMoneyToWallet(@PathVariable("Id") Long studentId,
 											@RequestBody @Valid Money money) {
 		
-		return walletService.addMoneyToStudentWallet(studentId, money);
+		return walletService.addMoneyToStudentWalletFromExternalPayment(studentId, money);
 	}
 	
 	@GET

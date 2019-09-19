@@ -17,6 +17,8 @@ import com.shubhanuj.springboot.student.model.Money;
 import com.shubhanuj.springboot.student.model.Student;
 import com.shubhanuj.springboot.student.model.Wallet;
 import com.shubhanuj.springboot.student.repository.WalletRepository;
+import com.shubhanuj.springboot.student.transaction.FinancialTransaction;
+import com.shubhanuj.springboot.student.transaction.TransactionManager;
 import com.shubhanuj.springboot.student.utils.WalletUtils;
 
 /**
@@ -37,12 +39,18 @@ public class WalletServiceImpl implements WalletService {
 	 * @see com.shubhanuj.springboot.student.service.WalletService#addMoneyToStudentWallet(java.lang.Long, com.shubhanuj.springboot.student.model.Money)
 	 */
 	@Override
-	public Map<String,Object> addMoneyToStudentWallet(Long studentId, Money money) {
+	public Map<String,Object> addMoneyToStudentWalletFromExternalPayment(Long studentId, Money money) {
 		
 		Map<String,Object> walletMap=new HashMap<String, Object>();
 		try {
-			Student student=(Student) studentService.getStudentById(studentId).get("Student");
-			walletMap.put("Wallet", addMoneyToWallet(student.getWallet(), money));
+			FinancialTransaction finTrans=TransactionManager.startFinancialTransaction();
+			finTrans.getPaymentTransaction().setMoney(money);
+			finTrans.getPaymentTransaction().setSource(null);
+			finTrans.getPaymentTransaction().setDestination(studentId);
+			finTrans.getPaymentTransaction().setPaymentSystem("INTERNAL");//Not implemented yet, set internal for all
+			finTrans.getPaymentTransaction().setTransactionStatus(1);
+			finTrans.getPaymentTransaction().setTransactionType(1);
+			walletMap.put("Wallet", addMoneyToWallet(finTrans));
 		walletMap.put("addMoneySuccess", true);
 		}
 		catch(ResourceNotAvailableException exp) {
@@ -53,21 +61,21 @@ public class WalletServiceImpl implements WalletService {
 		return walletMap;
 	}
 
-	private @Valid Wallet addMoneyToWallet(Wallet wallet, Money money) throws ResourceNotAvailableException {
+	private @Valid Wallet addMoneyToWallet(FinancialTransaction financialTransaction) throws ResourceNotAvailableException {
 		
-		if( wallet == null || money == null) {
-			if(wallet == null)
-				throw new ResourceNotAvailableException("Wallet is not available.");
-			throw new ResourceNotAvailableException("Money is not available. Please check your input again.");
+		if( financialTransaction == null) {
+			throw new ResourceNotAvailableException("FinancialTransaction is not available.");
 		}
+		
+		Student destStudent=studentService.getStudentById(financialTransaction.getPaymentTransaction().getDestination()).get();
 
-		if (!wallet.getCurrency().equals(money.getCurrency())) {
-			money = WalletUtils.convertCurrency(WalletConstants.WALLET_AVAILABLE_CURRENCY.INDIA.getCURRENCY(),
-					money);
+		if (!destStudent.getWallet().getCurrency().equals(financialTransaction.getPaymentTransaction().getMoney().getCurrency())) {
+			financialTransaction.getPaymentTransaction().setMoney(WalletUtils.convertCurrency(WalletConstants.WALLET_AVAILABLE_CURRENCY.INDIA.getCURRENCY(),
+					financialTransaction.getPaymentTransaction().getMoney())) ;
 		}
-		wallet.setBalance(wallet.getBalance().add(money.getValue()));
-		wallet.setAvailableBalance(wallet.getAvailableBalance().add(money.getValue()));
-		return saveWallet(wallet);
+		destStudent.getWallet().setBalance(destStudent.getWallet().getBalance().add(financialTransaction.getPaymentTransaction().getMoney().getValue()));
+		destStudent.getWallet().setAvailableBalance(destStudent.getWallet().getAvailableBalance().add(financialTransaction.getPaymentTransaction().getMoney().getValue()));
+		return saveWallet(destStudent.getWallet());
 	}
 
 	/* (non-Javadoc)
@@ -77,7 +85,7 @@ public class WalletServiceImpl implements WalletService {
 	public Map<String,Object> getWalletForStudent(Long studentId) {
 		
 		Map<String,Object> walletMap=new HashMap<String, Object>();
-		Student student=(Student) studentService.getStudentById(studentId).get("Student");
+		Student student=(Student) studentService.getStudentById(studentId).get();
 		
 		walletMap.put("Wallet", student.getWallet());
 		

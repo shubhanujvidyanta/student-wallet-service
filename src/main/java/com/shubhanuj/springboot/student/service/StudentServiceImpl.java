@@ -6,6 +6,7 @@ package com.shubhanuj.springboot.student.service;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -83,23 +84,27 @@ public class StudentServiceImpl implements StudentService {
 	 * @see com.shubhanuj.springboot.student.service.StudentService#getStudentById(java.lang.Long)
 	 */
 	@Override
-	public Map<String,Object> getStudentById(Long studentId) {
+	public Map<String,Object> getStudentMapById(Long studentId) {
 		
 		Map<String,Object> studentMap=new HashMap<String,Object>();
 		if (studentRepository.findById(studentId).isPresent()) {
-			studentMap.put("Student", studentRepository.findById(studentId).get());
+			studentMap.put("Student", getStudentById(studentId).get());
 		} else {
 			studentMap.put("Student", null);
 		}
 
 		return studentMap;
 	}
+	
+	public Optional<Student> getStudentById(Long studentId) {
+		return studentRepository.findById(studentId);
+	}
 
 	/* (non-Javadoc)
 	 * @see com.shubhanuj.springboot.student.service.StudentService#getStudentByEmail(java.lang.String)
 	 */
 	@Override
-	public Map<String,Object> getStudentByEmail(String email) {
+	public Map<String,Object> getStudentMapByEmail(String email) {
 		Map<String,Object> studentMap=new HashMap<String,Object>();
 		
 			studentMap.put("Student", studentRepository.findByEmail(email));
@@ -118,7 +123,7 @@ public class StudentServiceImpl implements StudentService {
 		Map<String, Object> walletMap=new HashMap<String, Object>();
 
 		try {
-			Student student = (Student) getStudentById(studentId).get("Student");
+			Student student = (Student) getStudentById(studentId).get();
 			
 			if (student != null) {
 				String currency = StudentUtils.getCurrencyForCountry(student.getCountry());
