@@ -13,7 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -83,9 +82,6 @@ public class PaymentTransaction implements Serializable{
 	@Column(name = "destination_student_id")
 	private Long destination;
 	
-	@Transient
-	private Money money;
-
 	@Column(nullable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
@@ -219,7 +215,7 @@ public class PaymentTransaction implements Serializable{
 	 * @return the money
 	 */
 	public Money getMoney() {
-		return money.setCurrency(getCurrency()).setValue(getAmount());
+		return new Money().setCurrency(getCurrency()).setValue(getAmount());
 	}
 
 	/**

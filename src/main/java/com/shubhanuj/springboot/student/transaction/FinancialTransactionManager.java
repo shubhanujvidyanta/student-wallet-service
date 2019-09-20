@@ -3,15 +3,17 @@
  */
 package com.shubhanuj.springboot.student.transaction;
 
+import com.shubhanuj.springboot.student.utils.BeanUtil;
+
 /**
  * @author Shubhanuj
  *
  */
-public class TransactionManager {
+
+public class FinancialTransactionManager {
 	
-	
-	public static FinancialTransaction startFinancialTransaction() {
-		return new FinancialTransaction();
+	public static FinancialTransaction startNewFinancialTransaction() {
+		return BeanUtil.getBean(FinancialTransaction.class);
 	}
 	
 	public static void commitFinancialTransaction(FinancialTransaction financialTransaction) {

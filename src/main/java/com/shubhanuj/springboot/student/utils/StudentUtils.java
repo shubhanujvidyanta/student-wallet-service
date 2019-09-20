@@ -11,11 +11,8 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.shubhanuj.springboot.student.constants.WalletConstants;
 import com.shubhanuj.springboot.student.exception.EncryptionException;
-import com.shubhanuj.springboot.student.repository.StudentRepository;
 import com.sun.xml.messaging.saaj.packaging.mime.util.BASE64EncoderStream;
 
 /**
@@ -28,8 +25,6 @@ public class StudentUtils {
 	private static Cipher dcipher;
 	private static SecretKey key;
 	
-	@Autowired
-	static StudentRepository studentRepository;
 
 	static {
 		try {

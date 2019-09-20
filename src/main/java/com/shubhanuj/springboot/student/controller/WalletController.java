@@ -43,7 +43,7 @@ public class WalletController {
 	@RequestMapping("/getBalance/{Id}")
 	public Map<String, Object> getWalletBalance(@PathVariable("Id") Long studentId) {
 		
-		return walletService.getWalletForStudent(studentId);
+		return walletService.getWalletMapForStudent(studentId);
 		
 	}
 	
