@@ -8,10 +8,14 @@ import com.shubhanuj.springboot.student.model.Wallet;
 public interface WalletService {
 
 
-	Wallet saveWallet(Wallet wallet);
+	public Wallet saveWallet(Wallet wallet);
 
-	Map<String, Object> addMoneyToStudentWalletFromExternalPayment(Long studentId, Money money);
+	public Map<String, Object> addMoneyToStudentWalletFromExternalPayment(Long studentId, Money money);
 
-	Map<String, Object> getWalletMapForStudent(Long studentId);
+	public Map<String, Object> getWalletMapForStudent(Long studentId);
+	
+	public Map<String, Object> putWalletBalanceOnHold(Long studentId, Money money);
+	
+	public Map<String, Object> depositOnHoldBalance(Long transactionId, Money money);
 
 }

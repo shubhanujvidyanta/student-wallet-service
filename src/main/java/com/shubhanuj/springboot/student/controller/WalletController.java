@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.validation.Valid;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,6 +46,20 @@ public class WalletController {
 		
 		return walletService.getWalletMapForStudent(studentId);
 		
+	}
+	
+	@POST
+	@RequestMapping("/onHold/{Id}")
+	public Map<String,Object> putWalletBalanceOnHold(@PathVariable("Id") Long studentId, @RequestBody @Valid Money money){
+		
+		return walletService.putWalletBalanceOnHold(studentId, money);
+	}
+	
+	@PUT
+	@RequestMapping("/depositHold/{Id}")
+	public Map<String,Object> depositOnHoldBalance(@PathVariable("Id") Long transactionId, @RequestBody @Valid Money money){
+		
+		return walletService.depositOnHoldBalance(transactionId, money);
 	}
 	
 

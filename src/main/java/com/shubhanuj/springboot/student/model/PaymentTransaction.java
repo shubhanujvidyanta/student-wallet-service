@@ -37,6 +37,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 	1- ACTIVE
 	2- SUCCESS
 	3- FAILURE
+	4- ON HOLD
  * @author Shubhanuj
  *
  */
@@ -50,7 +51,7 @@ public class PaymentTransaction implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 4536413437428240200L;
-
+ 
 	@Id
 	@Column(name = "transaction_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

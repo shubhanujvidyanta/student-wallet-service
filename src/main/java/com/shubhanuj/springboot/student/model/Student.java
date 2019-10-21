@@ -44,7 +44,7 @@ import com.shubhanuj.springboot.student.utils.StudentUtils;
 @Table(name = "student")
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
-public class Student implements Serializable{
+public class Student implements Serializable,Comparable<Student>{
 	
 	/**
 	 * 
@@ -272,6 +272,8 @@ public class Student implements Serializable{
 	public void setCountry(String country) {
 		this.country = country;
 	}
+	
+	
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -282,6 +284,17 @@ public class Student implements Serializable{
 				+ ", encryptedPassword=" + encryptedPassword + ", passwordEncrypted=" + passwordEncrypted + ", country="
 				+ country + ", phoneNumber=" + phoneNumber + ", wallet=" + wallet + ", addresses=" + addresses
 				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
+	}
+
+	@Override
+	public int compareTo(Student o) {
+		if(this.getCreatedAt().before(o.getCreatedAt()))
+			return 1;
+		
+		else if(this.getCreatedAt().after(o.getCreatedAt()))
+			return -1;
+		
+		return 0;
 	}
 	
 
